@@ -72,6 +72,7 @@ To suppress a legitimate audit hit, put this on the line or the line above it:
 
 ## Changelog
 
+- **0.2.1:** the starter's audit script is now `pnpm design-audit`. `pnpm audit` is a built-in pnpm command and never ran it.
 - **0.2.0**
   - Browser QA runs axe-core and checks for a branded 404, `robots.txt`, and `sitemap.xml`.
   - The design audit flags faded text tokens that fall below 4.5:1.

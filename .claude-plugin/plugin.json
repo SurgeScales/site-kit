@@ -1,7 +1,7 @@
 {
   "name": "site-kit",
   "description": "A repeatable process for building distinctive, well-crafted brand websites: brand intake, a design direction per brand, a shared quality bar (12 style rules, 10 UX laws, pre-ship checklist), automated design and browser checks, media and sneak-peek tools, and a Next.js starter.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "SurgeScales"
   },

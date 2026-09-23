@@ -12,9 +12,9 @@
     "preview": "npx serve out -l 4173",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "audit": "node .site-kit/design-audit.mjs",
     "qa": "node .site-kit/browser-qa.mjs",
-    "og": "node .site-kit/og-image.mjs"
+    "og": "node .site-kit/og-image.mjs",
+    "design-audit": "node .site-kit/design-audit.mjs"
   },
   "dependencies": {
     "class-variance-authority": "0.7.1",
