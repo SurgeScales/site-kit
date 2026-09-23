@@ -26,6 +26,7 @@ This list is adapted from Aftermark AI's *Vibe Coded Websites Report*. Run it be
 - [ ] Components keep the same size, padding, and alignment on every page.
 - [ ] **qa:** Mobile is checked first at 390px, with no horizontal overflow on any route.
 - [ ] **qa:** No console errors or page errors on any route.
+- [ ] **qa:** An axe-core WCAG 2.1 AA scan is clean at 1440 and 390 wide on every route. Serious and critical violations block the merge. Inline links are underlined, not color-only.
 
 ## Copy
 
@@ -37,6 +38,7 @@ This list is adapted from Aftermark AI's *Vibe Coded Websites Report*. Run it be
 ## Technical
 
 - [ ] **qa:** Every route has a `<title>` and a meta description.
+- [ ] **qa:** Unknown URLs return a branded 404 with the main actions, and `robots.txt` and `sitemap.xml` exist. schema.org Organization or LocalBusiness data comes from the brand file.
 - [ ] **qa:** An Open Graph image (`public/og.png`, 1200×630) and a favicon are present.
 - [ ] **audit:** No placeholder text ("Lorem", "TODO", "TBD", "Your company", "example.com").
 - [ ] **qa:** Every button, link, tab, accordion, and dialog works. Internal links resolve with no 404s.

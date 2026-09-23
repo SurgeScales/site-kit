@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Instrument_Sans } from 'next/font/google';
 import { SiteHeader } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';
-import { brand } from '@/lib/brand';
+import { brand, contact } from '@/lib/brand';
 import './globals.css';
 
 /** One family. Swap it in the site-direction step (keep the `--font-brand` variable name). */
@@ -23,6 +23,20 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', images: ['/og.png'] },
 };
 
+/** schema.org Organization for search engines, from the same data the footer uses. Switch @type to
+ * LocalBusiness (or a subtype such as VeterinaryCare) and split the address when the brand has a storefront. */
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: brand.name,
+  legalName: brand.legalName,
+  description: brand.promise,
+  url: brand.siteUrl,
+  telephone: contact.phone,
+  email: contact.email,
+  address: contact.address,
+};
+
 export const viewport: Viewport = { themeColor: '#0f1012', colorScheme: 'dark' };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -35,6 +49,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }} />
       </body>
     </html>
   );

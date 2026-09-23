@@ -88,6 +88,7 @@ const rules = [
     if (warm) return `Rule 10: warm neutral ${warm} reads as "AI beige". Use a true gray.`;
     return /\b(bg|text|border|from|via|to|fill)-(stone|amber-50|orange-50|yellow-50)\b/.test(l) ? 'Rule 10: warm neutral utility (stone/amber-50). Use a true gray.' : false;
   }, ''],
+  ['faded-text', 'error', (l) => /(?<!placeholder:)\btext-(ink-faint|muted-foreground)\/(\d+|\[[\d.]+\])|(?<!placeholder:)\btext-ink-soft\/([1-7]\d)\b|(?<!placeholder:)\btext-foreground\/([1-4]\d)\b/.test(l), 'Contrast: this faded text token drops below 4.5:1. Use the token at full strength or the next ink step.'],
   ['accent-fill', 'error', (l) => /<section[^>]*className=["'`{][^>]*\bbg-primary(\/|\b)/.test(l), 'Rule 12: accent used as a section fill.'],
   ['accent-wash', 'warn', (l) => /\bbg-primary\/([3-9]\d|\[0?\.[3-9])/.test(l), 'Rule 12: heavy accent wash. Keep accent fills to buttons and small details.'],
   ['glow', 'error', (l) => /shadow-\[0_0_\d+px|drop-shadow-\[0_0_\d+px|box-shadow:\s*0 0 \d+px [^;]*(rgba?\(|#)(?!0{3})/.test(l) || (/blur-(2xl|3xl)/.test(l) && /\bbg-(primary|purple|violet|fuchsia|pink|indigo|cyan)/.test(l)), 'Checklist: glow. Floating layers use the single elevation style.'],

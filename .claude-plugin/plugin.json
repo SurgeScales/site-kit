@@ -1,9 +1,18 @@
 {
   "name": "site-kit",
   "description": "A repeatable process for building distinctive, well-crafted brand websites: brand intake, a design direction per brand, a shared quality bar (12 style rules, 10 UX laws, pre-ship checklist), automated design and browser checks, media and sneak-peek tools, and a Next.js starter.",
-  "version": "0.1.0",
-  "author": { "name": "SurgeScales" },
+  "version": "0.2.0",
+  "author": {
+    "name": "SurgeScales"
+  },
   "repository": "https://github.com/SurgeScales/site-kit",
   "license": "UNLICENSED",
-  "keywords": ["design-system", "nextjs", "tailwind", "website", "qa", "brand"]
+  "keywords": [
+    "design-system",
+    "nextjs",
+    "tailwind",
+    "website",
+    "qa",
+    "brand"
+  ]
 }

@@ -8,9 +8,9 @@ It packages a process proven on client work (Maintenance Exchange, September 202
 | --- | --- | --- |
 | **Rules** | 12 style rules, 10 UX laws, a pre-ship checklist, and proven patterns. No brand-specific content. | `skills/site-standards/` |
 | **Process** | Brief → direction → build → media → QA, as skills that write `BRAND.md`, `DESIGN-SYSTEM.md`, and a `DESIGN.md` decision log. | `skills/site-*`, `commands/new-site.md` |
-| **Automatic checks** | A static design audit (about 30 checks, including token contrast) and browser QA covering overflow at 390px, titles and descriptions, the OG image, favicon, console errors, the solid header, and broken links. | `scripts/design-audit.mjs`, `scripts/browser-qa.mjs` |
+| **Automatic checks** | A static design audit (about 30 checks, including token contrast) and browser QA covering an axe-core WCAG 2.1 AA scan at two widths, overflow at 390px, titles and descriptions, the OG image, favicon, console errors, the solid header, broken links, a real 404 page, robots.txt, and sitemap.xml. | `scripts/design-audit.mjs`, `scripts/browser-qa.mjs` |
 | **Sneak peeks** | Stills at 2× and 3×, plus a smooth 30fps load video rendered frame by frame. | `scripts/sneak-stills.mjs`, `scripts/sneak-video.mjs` |
-| **Starter site** | Next.js static export with Tailwind 4 tokens, a solid header, a footer with the legal line, primitives, and the hero-media pattern. Its borders and fills use theme tokens, so it works on dark or light brands. | `templates/starter/` |
+| **Starter site** | Next.js static export with Tailwind 4 tokens, a solid header, a footer with the legal line, primitives, and the hero-media pattern. Its borders and fills use theme tokens, so it works on dark or light brands. Also included: a 404 page, robots.txt, sitemap.xml, and Organization structured data. | `templates/starter/` |
 
 ## Install
 
@@ -69,6 +69,16 @@ To suppress a legitimate audit hit, put this on the line or the line above it:
 - **Starter, untouched:** builds, lints, and typechecks. The audit fails only on the "site-kit starter" markers, as intended, until the brief and direction are done.
 - **Tidewater Animal Clinic** (a made-up brand; light true-gray, deep teal, Figtree, 12/20 radii): scaffolded, branded, and passed every check with zero audit findings. It looks nothing like Maintenance Exchange.
 - **Deliberately bad page** (italics, uppercase tracking, a gradient headline, "Learn more", half-steps, a 600px element, a semi-transparent sticky header): every problem was caught.
+
+## Changelog
+
+- **0.2.0**
+  - Browser QA runs axe-core and checks for a branded 404, `robots.txt`, and `sitemap.xml`.
+  - The design audit flags faded text tokens that fall below 4.5:1.
+  - The starter ships a 404 page, robots, sitemap, and Organization JSON-LD, with `axe-core` as a dev dependency.
+
+  These came from a full audit of Maintenance Exchange, which found contrast, list-markup, link, landmark, and heading-order problems that 0.1 couldn't see.
+- **0.1.0:** first release.
 
 ## Evolving the rules
 

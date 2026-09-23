@@ -6,9 +6,11 @@
  *
  * Per route: no horizontal overflow at 390px and 1440px, a <title> and meta description, an Open Graph image
  * that resolves, a favicon, no console or page errors, a solid (opaque) header, and internal links that
- * resolve. Routes default to a crawl of internal links from "/". Exit code 1 on any failure.
+ * resolve. With axe-core installed (the starter lists it), every route is also scanned for WCAG 2.1 AA at
+ * both widths: serious and critical violations fail, moderate ones warn. Site-wide: a real 404 page,
+ * robots.txt, and sitemap.xml. Routes default to a crawl of internal links from "/". Exit code 1 on any failure.
  */
-import { loadChromium, parseArgs } from './lib/playwright.mjs';
+import { loadAxeSource, loadChromium, parseArgs } from './lib/playwright.mjs';
 
 const args = parseArgs(process.argv.slice(2));
 const base = (args.base ?? 'http://localhost:4173').replace(/\/$/, '');
@@ -16,6 +18,7 @@ const max = Number(args.max ?? 40);
 const explicit = args.routes ? [].concat(args.routes) : null;
 
 const chromium = await loadChromium();
+const axeSource = args['no-axe'] ? null : loadAxeSource();
 const browser = await chromium.launch();
 const ctx = await browser.newContext();
 const results = [];
@@ -118,6 +121,33 @@ async function checkRoute(route) {
   const desktopOverflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   if (desktopOverflow > 1) problems.push(`horizontal overflow at 1440px: ${desktopOverflow}px`);
 
+  if (axeSource) {
+    for (const [w, h] of [[1440, 900], [390, 844]]) {
+      await page.setViewportSize({ width: w, height: h });
+      // Walk the page so scroll reveals have fired; hidden content would hide contrast problems.
+      const height = await page.evaluate(() => document.documentElement.scrollHeight);
+      for (let y = 0; y < height; y += 400) {
+        await page.evaluate((y) => scrollTo(0, y), y);
+        await page.waitForTimeout(50);
+      }
+      await page.waitForTimeout(500);
+      await page.addScriptTag({ content: axeSource });
+      const violations = await page.evaluate(async () =>
+        (await window.axe.run(document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21aa', 'best-practice'] })).violations.map((v) => ({
+          id: v.id,
+          impact: v.impact,
+          help: v.help,
+          count: v.nodes.length,
+          target: v.nodes[0]?.target.join(' '),
+        })),
+      );
+      for (const v of violations) {
+        const line = `a11y ${v.id} at ${w}px (${v.count}×): ${v.help}. First: ${v.target}`;
+        (v.impact === 'serious' || v.impact === 'critical' ? problems : warnings).push(line);
+      }
+    }
+  }
+
   if (errors.length) problems.push(...[...new Set(errors)].slice(0, 5).map((e) => `console/page error: ${e.slice(0, 200)}`));
 
   const internal = [];
@@ -145,8 +175,14 @@ while (queue.length && seen.size < max) {
   results.push(r);
   if (!explicit) for (const l of r.links) if (!seen.has(l) && !/\.(png|jpe?g|webp|svg|pdf|mp4|webm|xml|txt|ico)$/i.test(l)) queue.push(l);
 }
+const site = [];
+const notFound = await ctx.request.get(`${base}/site-kit-missing-page-check/`).catch(() => null);
+if (!notFound || notFound.status() !== 404) site.push(`unknown URLs return ${notFound?.status() ?? 'nothing'}, not 404`);
+else if (/This page could not be found/.test(await notFound.text())) site.push('404 page is the framework default; add app/not-found.tsx with the main actions');
+for (const file of ['robots.txt', 'sitemap.xml']) if ((await status(`${base}/${file}`)) !== 200) site.push(`missing /${file}`);
 await browser.close();
 
+if (!axeSource) console.log('note: axe-core not found, accessibility scan skipped (pnpm add -D axe-core)');
 let failed = 0;
 for (const r of results) {
   const mark = r.problems.length ? 'FAIL' : 'ok  ';
@@ -155,5 +191,6 @@ for (const r of results) {
   for (const p of r.problems) console.log(`        ✗ ${p}`);
   for (const w of r.warnings) console.log(`        ! ${w}`);
 }
-console.log(`\nsite-kit browser QA: ${results.length} route(s), ${failed} failing.`);
-process.exit(failed ? 1 : 0);
+for (const p of site) console.log(`FAIL  (site) ${p}`);
+console.log(`\nsite-kit browser QA: ${results.length} route(s), ${failed} failing${site.length ? `, ${site.length} site-wide problem(s)` : ''}.`);
+process.exit(failed || site.length ? 1 : 0);

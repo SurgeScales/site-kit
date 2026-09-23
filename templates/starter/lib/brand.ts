@@ -19,6 +19,9 @@ export const brand = {
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:4173',
 } as const;
 
+/** Routes listed in sitemap.xml. Add every public page; leave out internal tools and checkout. */
+export const publicRoutes = ['/'] as const;
+
 export const nav = [
   { href: '/#work', label: 'Finished kitchens' },
   { href: '/#process', label: 'How a fit-out runs' },

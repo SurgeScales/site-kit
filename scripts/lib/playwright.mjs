@@ -23,6 +23,21 @@ export async function loadChromium() {
   process.exit(2);
 }
 
+/** axe-core source for accessibility scans, from the project or a global install; null when unavailable. */
+export function loadAxeSource() {
+  const roots = [path.join(process.cwd(), 'package.json')];
+  try {
+    roots.push(path.join(execSync('npm root -g', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(), 'noop.js'));
+  } catch {}
+  for (const from of roots) {
+    try {
+      const file = createRequire(from).resolve('axe-core/axe.min.js');
+      return fs.readFileSync(file, 'utf8');
+    } catch {}
+  }
+  return null;
+}
+
 /** Resolve an ffmpeg binary: PATH first, then the static build from `pip install imageio-ffmpeg`. */
 export function findFfmpeg() {
   try {

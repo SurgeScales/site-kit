@@ -1,12 +1,14 @@
 {
   "name": "surgescales",
-  "owner": { "name": "SurgeScales" },
+  "owner": {
+    "name": "SurgeScales"
+  },
   "plugins": [
     {
       "name": "site-kit",
       "source": "./",
       "description": "Build distinctive brand websites that all meet the same standard.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ]
 }
