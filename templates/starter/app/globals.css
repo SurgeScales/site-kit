@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. The only place colors, radii, type, and easing are defined.
+ * site-kit starter tokens: replace every value in the site-direction step, then delete this line.
+ * Specification: docs/DESIGN-SYSTEM.md
+ */
+@theme inline {
+  /* Surfaces: one background for every section */
+  --color-background: #0f1012;
+  --color-card: #16171a;
+  --color-popover: #18191c;
+  --color-muted: #1a1b1f;
+  --color-secondary: #1d1f23;
+  --color-accent: #22242a;
+
+  /* Ink at three strengths (true gray, never warm) */
+  --color-foreground: rgb(240 241 243 / 0.94);
+  --color-ink: rgb(240 241 243 / 0.94);
+  --color-ink-soft: rgb(240 241 243 / 0.64);
+  --color-ink-faint: rgb(240 241 243 / 0.52);
+  --color-muted-foreground: rgb(240 241 243 / 0.6);
+
+  /* The accent: buttons, icons, links, details. Never a fill larger than a button. */
+  --color-primary: #6ea8fe;
+  --color-primary-foreground: #08111f;
+  --color-primary-hover: #8bbaff;
+
+  /* Attention and irreversible actions */
+  --color-signal: #f2b43a;
+  --color-destructive: #f07470;
+
+  /* Lines */
+  --color-border: rgb(255 255 255 / 0.09);
+  --color-input: rgb(255 255 255 / 0.13);
+  --color-ring: #6ea8fe;
+
+  /* Shape: two radii only (controls, containers) */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 0.75rem;
+  --radius-3xl: 0.75rem;
+
+  /* Type: one family */
+  --font-sans: var(--font-brand), ui-sans-serif, sans-serif;
+
+  /* Motion: one curve */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Display face for headlines: same family, set by the direction. */
+@utility font-display {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Label face: meta text, table heads, captions. Sentence case, never uppercase. */
+@utility font-label {
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  h1,
+  h2 {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
