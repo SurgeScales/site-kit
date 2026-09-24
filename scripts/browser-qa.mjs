@@ -21,6 +21,8 @@ const chromium = await loadChromium();
 const axeSource = args['no-axe'] ? null : loadAxeSource();
 const browser = await chromium.launch();
 const ctx = await browser.newContext();
+// A real phone profile (touch, device scale, mobile viewport meta) catches what a narrowed desktop window can't.
+const phone = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
 const results = [];
 const linkStatus = new Map();
 
@@ -120,6 +122,25 @@ async function checkRoute(route) {
   await page.waitForTimeout(300);
   const desktopOverflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   if (desktopOverflow > 1) problems.push(`horizontal overflow at 1440px: ${desktopOverflow}px`);
+
+  // Phone gestures: fields under 16px make iOS Safari zoom on focus and leave the page pannable;
+  // double-tap zoom does the same unless the root sets touch-action: manipulation.
+  {
+    const mp = await phone.newPage();
+    await mp.goto(base + route, { waitUntil: 'load' }).catch(() => {});
+    await mp.waitForTimeout(600);
+    const g = await mp.evaluate(() => ({
+      pan: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      touch: getComputedStyle(document.documentElement).touchAction,
+      small: [...document.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea')]
+        .filter((e) => e.offsetParent && parseFloat(getComputedStyle(e).fontSize) < 16)
+        .map((e) => `${e.tagName.toLowerCase()}[name=${e.name || e.id || e.type}] ${getComputedStyle(e).fontSize}`),
+    }));
+    if (g.pan > 1) problems.push(`page pans sideways on a phone by ${g.pan}px`);
+    if (g.small.length) problems.push(`fields under 16px on a phone (iOS zooms on focus and the page becomes draggable): ${[...new Set(g.small)].slice(0, 4).join(', ')}`);
+    if (!/manipulation/.test(g.touch)) warnings.push(`root touch-action is "${g.touch}"; set manipulation so double-tap zoom can't leave the page pannable`);
+    await mp.close();
+  }
 
   if (axeSource) {
     for (const [w, h] of [[1440, 900], [390, 844]]) {

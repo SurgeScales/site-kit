@@ -24,7 +24,8 @@ This list is adapted from Aftermark AI's *Vibe Coded Websites Report*. Run it be
 
 - [ ] Every async action shows a loading state, and data areas use skeletons.
 - [ ] Components keep the same size, padding, and alignment on every page.
-- [ ] **qa:** Mobile is checked first at 390px, with no horizontal overflow on any route.
+- [ ] **qa:** Mobile is checked first at 390px, with no horizontal overflow on any route, using a real phone profile (touch and mobile viewport), not a narrowed desktop window.
+- [ ] **qa:** On phones, fields are 16px or larger (iOS zooms on focus otherwise, and the page becomes draggable in every direction), the root sets `touch-action: manipulation`, and the page scrolls vertically only.
 - [ ] **qa:** No console errors or page errors on any route.
 - [ ] **qa:** An axe-core WCAG 2.1 AA scan is clean at 1440 and 390 wide on every route. Serious and critical violations block the merge. Inline links are underlined, not color-only.
 

@@ -72,6 +72,12 @@ To suppress a legitimate audit hit, put this on the line or the line above it:
 
 ## Changelog
 
+- **0.2.2:**
+  - Browser QA uses a real phone profile.
+  - It fails fields under 16px, which iOS zooms into, leaving the page draggable, and it fails any page that pans sideways.
+  - The starter locks mobile scrolling to the vertical axis.
+
+  Found on Maintenance Exchange.
 - **0.2.1:** the starter's audit script is now `pnpm design-audit`. `pnpm audit` is a built-in pnpm command and never ran it.
 - **0.2.0**
   - Browser QA runs axe-core and checks for a branded 404, `robots.txt`, and `sitemap.xml`.
