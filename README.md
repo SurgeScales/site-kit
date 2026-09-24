@@ -8,16 +8,44 @@ It packages a process proven on client work (Maintenance Exchange, September 202
 | --- | --- | --- |
 | **Rules** | 12 style rules, 10 UX laws, a pre-ship checklist, and proven patterns. No brand-specific content. | `skills/site-standards/` |
 | **Process** | Brief → direction → build → media → QA, as skills that write `BRAND.md`, `DESIGN-SYSTEM.md`, and a `DESIGN.md` decision log. | `skills/site-*`, `commands/new-site.md` |
-| **Automatic checks** | A static design audit (about 30 checks, including token contrast) and browser QA covering an axe-core WCAG 2.1 AA scan at two widths, overflow at 390px, titles and descriptions, the OG image, favicon, console errors, the solid header, broken links, a real 404 page, robots.txt, and sitemap.xml. | `scripts/design-audit.mjs`, `scripts/browser-qa.mjs` |
-| **Sneak peeks** | Stills at 2× and 3×, plus a smooth 30fps load video rendered frame by frame. | `scripts/sneak-stills.mjs`, `scripts/sneak-video.mjs` |
-| **Starter site** | Next.js static export with Tailwind 4 tokens, a solid header, a footer with the legal line, primitives, and the hero-media pattern. Its borders and fills use theme tokens, so it works on dark or light brands. Also included: a 404 page, robots.txt, sitemap.xml, and Organization structured data. | `templates/starter/` |
+| **Automatic checks** | A static design audit (about 30 checks, including token contrast) and browser QA covering an axe-core WCAG 2.1 AA scan at two widths, overflow at 390px, titles and descriptions, the OG image, favicon, console errors, the solid header, broken links, a real 404 page, robots.txt, and sitemap.xml. | `kit/scripts/design-audit.mjs`, `kit/scripts/browser-qa.mjs` |
+| **Sneak peeks** | Stills at 2× and 3×, plus a smooth 30fps load video rendered frame by frame. | `kit/scripts/sneak-stills.mjs`, `kit/scripts/sneak-video.mjs` |
+| **Starter site** | Next.js static export with Tailwind 4 tokens, a solid header, a footer with the legal line, primitives, and the hero-media pattern. Its borders and fills use theme tokens, so it works on dark or light brands. Also included: a 404 page, robots.txt, sitemap.xml, and Organization structured data. | `kit/templates/starter/` |
 
 ## Install
+
+The same skills work in four places. Pick whichever fits.
+
+**1. Claude Code plugin** (recommended). You get all six skills plus the `/site-kit:new-site`, `/site-kit:audit`, and `/site-kit:sneak-peek` commands.
 
 ```text
 /plugin marketplace add SurgeScales/site-kit
 /plugin install site-kit@surgescales
 ```
+
+**2. Automatically, for everyone on a project.** Add this to the project's `.claude/settings.json`. Anyone who opens the repo in Claude Code is offered the plugin, with no manual install. Every site scaffolded by the kit already includes it.
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "surgescales": { "source": { "source": "github", "repo": "SurgeScales/site-kit" } }
+  },
+  "enabledPlugins": { "site-kit@surgescales": true }
+}
+```
+
+**3. Any coding agent, with the skills CLI.** This works with Claude Code, Cursor, Codex, and other agents that read skills. It copies the six skills into the project, or into your user folder with `-g`.
+
+```sh
+npx skills add SurgeScales/site-kit            # this project
+npx skills add SurgeScales/site-kit -g         # every project on this machine
+```
+
+The scripts and templates travel inside `skills/site-build/kit/`, so scaffolding and checks work without the plugin.
+
+**4. Claude app (claude.ai / desktop).** Zip a skill folder, for example `skills/site-standards/`, and upload it under Settings → Capabilities → Skills. `site-standards` is the one that matters most in chat: the rules, UX laws, checklist, and patterns. The others expect a terminal for their scripts.
+
+The repository is private. Every method needs a GitHub login that can read `SurgeScales/site-kit`.
 
 ## Use
 
@@ -40,7 +68,7 @@ The skills also load on their own when a task matches them:
 Scaffolding vendors the scripts into each site's `.site-kit/` folder, so a site stays checkable without the plugin.
 
 ```bash
-node <kit>/scripts/scaffold.mjs my-site --name "Brand Name"   # new site from the starter
+node skills/site-build/kit/scripts/scaffold.mjs my-site --name "Brand Name"   # new site from the starter
 node .site-kit/design-audit.mjs [--json]                      # static rules and token contrast, about 1s
 node .site-kit/browser-qa.mjs [--base URL] [--routes / /x/]   # crawls routes from / by default
 node .site-kit/og-image.mjs                                   # public/og.png from the first viewport
@@ -72,6 +100,10 @@ To suppress a legitimate audit hit, put this on the line or the line above it:
 
 ## Changelog
 
+- **0.3.0:**
+  - The scripts and templates moved into `skills/site-build/kit/`, so the skills work fully when installed with `npx skills add` or copied by hand, not only as a plugin.
+  - New sites include `.claude/settings.json`, which offers the plugin automatically.
+  - Added install instructions for the Claude app.
 - **0.2.2:**
   - Browser QA uses a real phone profile.
   - It fails fields under 16px, which iOS zooms into, leaving the page draggable, and it fails any page that pans sideways.
@@ -97,6 +129,7 @@ When a client rejects something, fix it on the site first. Then decide whether t
 .claude-plugin/   plugin.json, marketplace.json
 commands/         new-site, audit, sneak-peek
 skills/           site-standards (+ references/), site-brief, site-direction (+ references/axes.md), site-build, site-media, site-qa
-scripts/          design-audit, browser-qa, og-image, sneak-stills, sneak-video, hero-video.sh, scaffold, lib/
-templates/        AGENTS.md, DESIGN.md, BRAND.md, DESIGN-SYSTEM.md, starter/
+skills/site-build/kit/
+  scripts/        design-audit, browser-qa, og-image, sneak-stills, sneak-video, hero-video.sh, scaffold, lib/
+  templates/      AGENTS.md, DESIGN.md, BRAND.md, DESIGN-SYSTEM.md, starter/ (includes .claude/settings.json)
 ```

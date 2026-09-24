@@ -1,0 +1,10 @@
+{
+  "extraKnownMarketplaces": {
+    "surgescales": {
+      "source": { "source": "github", "repo": "SurgeScales/site-kit" }
+    }
+  },
+  "enabledPlugins": {
+    "site-kit@surgescales": true
+  }
+}

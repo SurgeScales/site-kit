@@ -18,7 +18,7 @@ Proof comes after, as a single sentence, never a row of badges.
 - Use `<video autoPlay muted playsInline preload="auto">` with **no `loop`**. The browser keeps the last frame until the page reloads.
 - Use the first frame as `poster` so there is no jump when playback starts.
 - Under `motion-reduce`, hide the video and show the final frame as an `<img>`.
-- Serve a VP9 WebM with an H.264 MP4 fallback (`+faststart`), without audio. `scripts/hero-video.sh` does all of this.
+- Serve a VP9 WebM with an H.264 MP4 fallback (`+faststart`), without audio. The kit's `hero-video.sh` does all of this (see the `site-media` skill).
 - Inspect every clip frame by frame before using it. Check for:
   - garbled label text
   - morphing products

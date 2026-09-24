@@ -10,7 +10,7 @@ Every site should look like its brand, not like the kit. A direction is a set of
 ## Locate the kit
 
 ```bash
-KIT="${CLAUDE_PLUGIN_ROOT:-}"; [ -d "$KIT/templates" ] || KIT="$(dirname "$(dirname "$(find ~/.claude/plugins -path '*site-kit*' -name plugin.json -print -quit 2>/dev/null)")")"
+KIT="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/site-build/kit}"; [ -d "$KIT/templates" ] || KIT="$(find "$PWD/.claude" "$PWD/.agents" ~/.claude ~/.agents -type d -path '*site-build/kit' 2>/dev/null | head -1)"
 ```
 
 ## 1. Choose on seven axes

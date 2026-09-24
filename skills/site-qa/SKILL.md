@@ -8,7 +8,7 @@ description: Step 5 of building a brand website with site-kit, and the gate befo
 The scripts live in the project at `.site-kit/`, vendored by the scaffold. If they are missing, copy them from the kit:
 
 ```bash
-KIT="${CLAUDE_PLUGIN_ROOT:-}"; [ -d "$KIT/templates" ] || KIT="$(dirname "$(dirname "$(find ~/.claude/plugins -path '*site-kit*' -name plugin.json -print -quit 2>/dev/null)")")"
+KIT="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/site-build/kit}"; [ -d "$KIT/templates" ] || KIT="$(find "$PWD/.claude" "$PWD/.agents" ~/.claude ~/.agents -type d -path '*site-build/kit' 2>/dev/null | head -1)"
 mkdir -p .site-kit && cp -r "$KIT"/scripts/. .site-kit/ && rm .site-kit/scaffold.mjs
 ```
 

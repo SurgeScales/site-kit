@@ -8,8 +8,10 @@ description: Step 3 of building a brand website with site-kit. Scaffolds the Nex
 ## Locate the kit
 
 ```bash
-KIT="${CLAUDE_PLUGIN_ROOT:-}"; [ -d "$KIT/templates" ] || KIT="$(dirname "$(dirname "$(find ~/.claude/plugins -path '*site-kit*' -name plugin.json -print -quit 2>/dev/null)")")"
+KIT="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/site-build/kit}"; [ -d "$KIT/templates" ] || KIT="$(find "$PWD/.claude" "$PWD/.agents" ~/.claude ~/.agents -type d -path '*site-build/kit' 2>/dev/null | head -1)"
 ```
+
+The kit's scripts and templates live in this skill's `kit/` folder, so they travel with the skill however it was installed: as the plugin, with `npx skills add`, or copied by hand.
 
 ## 1. Scaffold (new project)
 
@@ -20,8 +22,8 @@ cd <target-dir> && pnpm install && pnpm build
 
 `scaffold.mjs` copies the files below and sets the package name. It refuses to overwrite a non-empty directory unless you pass `--force`.
 
-- `templates/starter/`: a static-export Next.js app with a token-driven `globals.css`, a solid header, a footer with the legal line, primitives, `Reveal`, `Button`, `og.png` and favicon slots, and a sample home page.
-- `scripts/` (with `lib/`) → `.site-kit/`: the audit, QA, and capture scripts, vendored so the site stays checkable without the plugin.
+- `kit/templates/starter/`: a static-export Next.js app with a token-driven `globals.css`, a solid header, a footer with the legal line, primitives, `Reveal`, `Button`, `og.png` and favicon slots, and a sample home page.
+- `kit/scripts/` (with `lib/`) → `.site-kit/`: the audit, QA, and capture scripts, vendored so the site stays checkable without the plugin.
 - `templates/AGENTS.md`, `templates/DESIGN.md`, and `templates/BRAND.md` → `docs/BRAND.md`, and `templates/DESIGN-SYSTEM.md` → `docs/`.
 
 For an **existing** Next.js repo, copy `scripts/` (including `lib/`, excluding `scaffold.mjs`) into `.site-kit/` and the three document templates by hand, then map the repo's tokens onto the starter's token names.

@@ -8,7 +8,7 @@ description: Step 4 of building a brand website with site-kit. Inspects and prep
 ## Locate the kit
 
 ```bash
-KIT="${CLAUDE_PLUGIN_ROOT:-}"; [ -d "$KIT/templates" ] || KIT="$(dirname "$(dirname "$(find ~/.claude/plugins -path '*site-kit*' -name plugin.json -print -quit 2>/dev/null)")")"
+KIT="${CLAUDE_PLUGIN_ROOT:+$CLAUDE_PLUGIN_ROOT/skills/site-build/kit}"; [ -d "$KIT/templates" ] || KIT="$(find "$PWD/.claude" "$PWD/.agents" ~/.claude ~/.agents -type d -path '*site-build/kit' 2>/dev/null | head -1)"
 ```
 
 `$KIT/scripts/hero-video.sh` needs `ffmpeg`. If it isn't installed, `pip install imageio-ffmpeg` provides a static binary, and the script finds it automatically.
